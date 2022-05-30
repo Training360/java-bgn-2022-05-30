@@ -7,6 +7,6 @@ public class Calculator {
         int b = 10;
         System.out.printf("%d + %d = %d\n", a, b, a + b);
         String name = "John";
-        System.out.printf("Hello %s!", name);
+        System.out.printf("Hello world %s!", name);
     }
 }
