@@ -8,5 +8,6 @@ public class Calculator {
         System.out.printf("%d + %d = %d\n", a, b, a + b);
         String name = "John";
         System.out.printf("Hello world Java GitHub %s!", name);
+        Integer i = Integer.valueOf(12);
     }
 }
