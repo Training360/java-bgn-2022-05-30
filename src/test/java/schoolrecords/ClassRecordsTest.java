@@ -142,6 +142,6 @@ class ClassRecordsTest {
 
     @Test
     void testListStudentNames() {
-        assertEquals("Kovács Rita, Nagy Béla, Varga Márton", classRecords.listStudentNames());
+        assertEquals(List.of("Kovács Rita", "Nagy Béla", "Varga Márton"), classRecords.listStudentNames());
     }
 }

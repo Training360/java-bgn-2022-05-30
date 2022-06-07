@@ -14,7 +14,7 @@ class TutorTest {
         Tutor tutor = new Tutor("Nagy Csilla", Arrays.asList(new Subject("matematika"), new Subject("fizika")));
         //Then
         assertEquals("Nagy Csilla", tutor.getName());
-        assertTrue(tutor.tutorTeachingSubject(new Subject("fizika")));
+        assertTrue(tutor.tutorTeachingSubject("fizika"));
     }
 
     @Test
@@ -22,6 +22,6 @@ class TutorTest {
         //Given
         Tutor tutor = new Tutor("Nagy Csilla", Arrays.asList(new Subject("matematika"), new Subject("fizika")));
         //Then
-        assertFalse(tutor.tutorTeachingSubject(new Subject("biológia")));
+        assertFalse(tutor.tutorTeachingSubject("biológia"));
     }
 }
