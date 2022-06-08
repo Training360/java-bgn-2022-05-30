@@ -21,7 +21,7 @@ class StudentTest {
 
     @Test
     void testNullMarkInGradingShouldThrowException() {
-        Exception ex = assertThrows(NullPointerException.class, () -> new Student("Kovács").grading(null));
+        Exception ex = assertThrows(NullPointerException.class, () -> new Student("Kovács").grade(null));
         assertEquals("Mark must not be null!", ex.getMessage());
     }
 
@@ -30,7 +30,7 @@ class StudentTest {
         //Given
         Student student = new Student("Kovács");
         //When
-        student.grading(new Mark(MarkType.A, MATH, TUTOR));
+        student.grade(new Mark(MarkType.A, MATH, TUTOR));
         //Then
         assertEquals("Kovács marks: matematika: excellent(5)", student.toString());
     }
@@ -40,9 +40,9 @@ class StudentTest {
         //Given
         Student student = new Student("Kovács");
         //When
-        student.grading(new Mark(MarkType.A, MATH, TUTOR));
-        student.grading(new Mark(MarkType.C, MATH, TUTOR));
-        student.grading(new Mark(MarkType.D, MATH, TUTOR));
+        student.grade(new Mark(MarkType.A, MATH, TUTOR));
+        student.grade(new Mark(MarkType.C, MATH, TUTOR));
+        student.grade(new Mark(MarkType.D, MATH, TUTOR));
         //Then
         assertEquals(3.33, student.calculateAverage());
     }
@@ -60,9 +60,9 @@ class StudentTest {
         //Given
         Student student = new Student("Kovács");
         //When
-        student.grading(new Mark(MarkType.A, MATH, TUTOR));
-        student.grading(new Mark(MarkType.C, new Subject("történelem"), TUTOR));
-        student.grading(new Mark(MarkType.D, MATH, TUTOR));
+        student.grade(new Mark(MarkType.A, MATH, TUTOR));
+        student.grade(new Mark(MarkType.C, new Subject("történelem"), TUTOR));
+        student.grade(new Mark(MarkType.D, MATH, TUTOR));
         //Then
         assertEquals(3.50, student.calculateSubjectAverage(MATH));
     }
@@ -80,9 +80,9 @@ class StudentTest {
         //Given
         Student student = new Student("Kovács");
         //When
-        student.grading(new Mark(MarkType.A, MATH, TUTOR));
-        student.grading(new Mark(MarkType.C, new Subject("történelem"), TUTOR));
-        student.grading(new Mark(MarkType.D, MATH, TUTOR));
+        student.grade(new Mark(MarkType.A, MATH, TUTOR));
+        student.grade(new Mark(MarkType.C, new Subject("történelem"), TUTOR));
+        student.grade(new Mark(MarkType.D, MATH, TUTOR));
         //Then
         assertEquals(0.0, student.calculateSubjectAverage(new Subject("földrajz")));
     }

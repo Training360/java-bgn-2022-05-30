@@ -16,7 +16,7 @@ public class Student {
         this.name = name;
     }
 
-    public void grading(Mark mark) {
+    public void grade(Mark mark) {
         if (mark == null) {
             throw new NullPointerException("Mark must not be null!");
         }

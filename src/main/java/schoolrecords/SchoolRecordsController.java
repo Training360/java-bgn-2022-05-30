@@ -5,10 +5,15 @@ import java.util.*;
 public class SchoolRecordsController {
 
     private static final int EXIT_MENU = 11;
-    Scanner scanner = new Scanner(System.in);
-    private School school = new School();
-    private ClassRecords classRecords = new ClassRecords("9.A", new Random());
+    Scanner scanner;
+    private School school;
+    private ClassRecords classRecords;
 
+    public SchoolRecordsController(Scanner scanner, School school, ClassRecords classRecords) {
+        this.scanner = scanner;
+        this.school = school;
+        this.classRecords = classRecords;
+    }
 
 //    public void initSchool() {
 //        Subject math = new Subject("math");
@@ -45,17 +50,19 @@ public class SchoolRecordsController {
     }
 
     private void menuToConsole() {
-        System.out.println("1. Diákok nevének listázása\n" +
-                "2. Diák név alapján keresése\n" +
-                "3. Diák létrehozása\n" +
-                "4. Diák név alapján törlése\n" +
-                "5. Diák feleltetése\n" +
-                "6. Osztályátlag kiszámolása\n" +
-                "7. Tantárgyi átlag kiszámolása\n" +
-                "8. Diákok átlagának megjelenítése\n" +
-                "9. Diák átlagának kiírása\n" +
-                "10. Diák tantárgyhoz tartozó átlagának kiírása\n" +
-                "11. Kilépés");
+        String menu = """
+                1. Diákok nevének listázása
+                2. Diák név alapján keresése
+                3. Diák létrehozása
+                4. Diák név alapján törlése
+                5. Diák feleltetése
+                6. Osztályátlag kiszámolása
+                7. Tantárgyi átlag kiszámolása
+                8. Diákok átlagának megjelenítése
+                9. Diák átlagának kiírása
+                10. Diák tantárgyhoz tartozó átlagának kiírása
+                11. Kilépés""";
+        System.out.println(menu);
     }
 
     private String readDataFromConsole(String message) {
@@ -65,79 +72,49 @@ public class SchoolRecordsController {
     }
 
     private void averageOfOneStudent() {
-        Student student = classRecords.findStudentByName(readDataFromConsole("Add meg a tanuló nevét!"));
-        System.out.println(student.calculateAverage());
+        String name = readDataFromConsole("Add meg a tanuló nevét!");
+        System.out.println(classRecords.calculateAverage(name));
     }
 
     private void getAverageOfStudentBySubject() {
-        Student student = classRecords.findStudentByName(readDataFromConsole("Add meg a tanuló nevét!"));
+        String name = readDataFromConsole("Add meg a tanuló nevét!");
         Subject subject = school.findSubjectByName(readDataFromConsole("Add meg a tantárgy nevét!"));
-        System.out.println(student.calculateSubjectAverage(subject));
+        System.out.println(classRecords.calculateSubjectAverage(name, subject));
     }
 
     private void studentRepetition() {
-        Student student = classRecords.repetition();
-        int mark = Integer.parseInt(readDataFromConsole("Kérem a jegyet!"));
+        String name = classRecords.repetition();
+        int markValue = Integer.parseInt(readDataFromConsole("Kérem a jegyet!"));
         String subjectName = readDataFromConsole("Kérem a tárgy nevét!");
+        Subject subject = school.findSubjectByName(subjectName);
         String tutorName = readDataFromConsole("Kérem a tanár nevét!");
-
-        Mark actualMark = new Mark(MarkType.findByValue(mark), school.findSubjectByName(subjectName), school.findTutorByName(tutorName));
-        student.grading(actualMark);
+        Tutor tutor = school.findTutorByName(tutorName);
+        MarkType markType = MarkType.findByValue(markValue);
+        classRecords.grade(name, markType, subject, tutor);
     }
 
     private void executeMenu(int menuNumber) {
         switch (menuNumber) {
-            case 1: {
-                System.out.println(classRecords.listStudentNames());
-                return;
-            }
-            case 2: {
-                System.out.println(classRecords.findStudentByName(readDataFromConsole("Add meg a tanuló nevét!")));
-                return;
-            }
-            case 3: {
-                classRecords.addStudent(new Student(readDataFromConsole("Add meg a tanuló nevét!")));
-                return;
-            }
-            case 4: {
-                classRecords.removeStudent(new Student(readDataFromConsole("Add meg a tanuló nevét!")));
-                return;
-            }
-            case 5: {
-                studentRepetition();
-                return;
-            }
-            case 6: {
-                classRecords.calculateClassAverage();
-                return;
-            }
-            case 7: {
-                System.out.println(classRecords.calculateClassAverageBySubject(new Subject(readDataFromConsole("Add meg a tantárgy nevét!"))));
-                return;
-            }
-            case 8: {
-                System.out.println(classRecords.listStudyResults());
-                return;
-            }
-            case 9: {
-                averageOfOneStudent();
-                return;
-            }
-            case 10: {
-                getAverageOfStudentBySubject();
-                return;
-            }
-            case 11: {
-                return;
-            }
-            default: {
-                System.out.println("Nem létezik ilyen menüpont!");
-            }
+            case 1 -> System.out.println(classRecords.listStudentNames());
+            case 2 -> System.out.println(classRecords.findStudentByName(readDataFromConsole("Add meg a tanuló nevét!")));
+            case 3 -> classRecords.addStudent(readDataFromConsole("Add meg a tanuló nevét!"));
+            case 4 -> classRecords.removeStudent(readDataFromConsole("Add meg a tanuló nevét!"));
+            case 5 -> studentRepetition();
+            case 6 -> classRecords.calculateClassAverage();
+            case 7 -> System.out.println(classRecords.calculateClassAverageBySubject(new Subject(readDataFromConsole("Add meg a tantárgy nevét!"))));
+            case 8 -> System.out.println(classRecords.listStudyResults());
+            case 9 -> averageOfOneStudent();
+            case 10 -> getAverageOfStudentBySubject();
+            case 11 -> System.out.println("Kilépés");
+            default -> System.out.println("Nem létezik ilyen menüpont!");
         }
     }
 
     public static void main(String[] args) {
-        SchoolRecordsController schoolRecordsController = new SchoolRecordsController();
+        Scanner scanner = new Scanner(System.in);
+        School school = new School();
+        ClassRecords classRecords = new ClassRecords("4b", new Random());
+        SchoolRecordsController schoolRecordsController = new SchoolRecordsController(scanner, school, classRecords);
         schoolRecordsController.runMenu();
     }
 }

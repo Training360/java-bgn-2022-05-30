@@ -25,21 +25,21 @@ class ClassRecordsTest {
                         new Subject("fizika"),
                         new Subject("kémia")));
         classRecords = new ClassRecords("Fourth Grade A", new Random(5));
-        Student firstStudent = new Student("Kovács Rita");
-        Student secondStudent = new Student("Nagy Béla");
-        Student thirdStudent = new Student("Varga Márton");
-        firstStudent.grading(new Mark(MarkType.A, new Subject("földrajz"), tutor));
-        firstStudent.grading(new Mark(MarkType.C, new Subject("matematika"), tutor));
-        firstStudent.grading(new Mark(MarkType.D, new Subject("földrajz"), tutor));
-        secondStudent.grading(new Mark(MarkType.A, new Subject("biológia"), tutor));
-        secondStudent.grading(new Mark(MarkType.C, new Subject("matematika"), tutor));
-        secondStudent.grading(new Mark(MarkType.D, new Subject("zene"), tutor));
-        thirdStudent.grading(new Mark(MarkType.A, new Subject("fizika"), tutor));
-        thirdStudent.grading(new Mark(MarkType.C, new Subject("kémia"), tutor));
-        thirdStudent.grading(new Mark(MarkType.D, new Subject("földrajz"), tutor));
-        classRecords.addStudent(firstStudent);
-        classRecords.addStudent(secondStudent);
-        classRecords.addStudent(thirdStudent);
+
+        classRecords.addStudent("Kovács Rita");
+        classRecords.addStudent("Nagy Béla");
+        classRecords.addStudent("Varga Márton");
+
+
+        classRecords.grade("Kovács Rita", MarkType.A, new Subject("földrajz"), tutor);
+        classRecords.grade("Kovács Rita", MarkType.C, new Subject("matematika"), tutor);
+        classRecords.grade("Kovács Rita", MarkType.D, new Subject("földrajz"), tutor);
+        classRecords.grade("Nagy Béla", MarkType.A, new Subject("biológia"), tutor);
+        classRecords.grade("Nagy Béla", MarkType.C, new Subject("matematika"), tutor);
+        classRecords.grade("Nagy Béla", MarkType.D, new Subject("zene"), tutor);
+        classRecords.grade("Varga Márton", MarkType.A, new Subject("fizika"), tutor);
+        classRecords.grade("Varga Márton", MarkType.C, new Subject("kémia"), tutor);
+        classRecords.grade("Varga Márton", MarkType.D, new Subject("földrajz"), tutor);
     }
 
     @Test
@@ -49,22 +49,22 @@ class ClassRecordsTest {
 
     @Test
     void testAddStudentAlreadyExists() {
-        assertFalse(classRecords.addStudent(new Student("Nagy Béla")));
+        assertFalse(classRecords.addStudent("Nagy Béla"));
     }
 
     @Test
     void testAddStudent() {
-        assertTrue(classRecords.addStudent(new Student("Nagy Klára")));
+        assertTrue(classRecords.addStudent("Nagy Klára"));
     }
 
     @Test
     void testRemoveStudent() {
-        assertTrue(classRecords.removeStudent(new Student("Nagy Béla")));
+        assertTrue(classRecords.removeStudent("Nagy Béla"));
     }
 
     @Test
     void testRemoveStudentDoesNotExists() {
-        assertFalse(classRecords.removeStudent(new Student("Nagy Klára")));
+        assertFalse(classRecords.removeStudent("Nagy Klára"));
     }
 
     @Test
@@ -77,7 +77,7 @@ class ClassRecordsTest {
     @Test
     void testNoMarksShouldThrowException() {
         ClassRecords classRecords = new ClassRecords("First Grade", new Random());
-        classRecords.addStudent(new Student("Nagy Béla"));
+        classRecords.addStudent("Nagy Béla");
 
         Exception ex = assertThrows(ArithmeticException.class, () -> classRecords.calculateClassAverage());
         assertEquals("No marks present, average calculation aborted!", ex.getMessage());
@@ -116,7 +116,7 @@ class ClassRecordsTest {
 
     @Test
     void testFindStudentByName() {
-        assertEquals("Kovács Rita", classRecords.findStudentByName("Kovács Rita").getName());
+        assertEquals("Kovács Rita", classRecords.findStudentByName("Kovács Rita"));
     }
 
     @Test
@@ -127,7 +127,7 @@ class ClassRecordsTest {
 
     @Test
     void testRepetition() {
-        assertEquals("Varga Márton", classRecords.repetition().getName());
+        assertEquals("Varga Márton", classRecords.repetition());
     }
 
     @Test
