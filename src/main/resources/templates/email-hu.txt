@@ -1,0 +1,8 @@
+Kedves [(${name})]!
+
+A fizetésed: [(${salary})]!
+
+Ezekhez értesz:
+[# th:each="skill : ${skills}"]
+* [(${skill})]
+[/]
