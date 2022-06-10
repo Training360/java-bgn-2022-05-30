@@ -11,4 +11,6 @@
     <root level="error">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="email" level="debug" />
 </configuration>
