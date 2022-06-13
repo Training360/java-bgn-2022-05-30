@@ -1,0 +1,8 @@
+class: Mobile
+name: Panasonic
+type: x304
+price: 1200
+class: Tablet
+name: Xiaomi
+type: xwerw
+price: 65342
