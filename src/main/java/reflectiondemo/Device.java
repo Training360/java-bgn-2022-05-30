@@ -3,7 +3,7 @@ package reflectiondemo;
 import lombok.Data;
 
 @Data
-public class Device {
+public abstract class Device {
 
     protected String name;
 

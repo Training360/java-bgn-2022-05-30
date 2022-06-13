@@ -1,6 +1,7 @@
 package reflectiondemo;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,49 +13,81 @@ public class DevicesFile {
 
     private Path path;
 
+    private List<Device> result = new ArrayList<>();
+
+    private Device device = null;
+
+    private String key;
+
+    private String value;
+
     public DevicesFile(Path path) {
         this.path = path;
     }
 
     public List<Device> getDevices() {
-        List<Device> result = new ArrayList<>();
         try {
             List<String> lines = Files.readAllLines(path);
-            Device device = null;
             for (String line: lines) {
-                String[] parts = line.split(":");
-                String key = parts[0].trim();
-                String value = parts[1].trim();
-
-                if (key.equals("class")) {
-                    String className = DevicesFile.class.getPackageName() + "." + value;
-                    Class clazz = Class.forName(className);
-                    Constructor constructor = clazz.getConstructor();
-                    device = (Device) constructor.newInstance();
-                    result.add(device);
-                }
-                else {
-                    String methodName = "set" + key.substring(0, 1).toUpperCase()
-                            + key.substring(1);
-
-                    Method method = Arrays.stream(device.getClass().getMethods())
-                            .filter(m -> m.getName().equals(methodName))
-                            .findAny().get();
-
-                    if (method.getParameterTypes()[0] == int.class) {
-                        Integer i = Integer.parseInt(value);
-                        method.invoke(device, i);
-                    }
-                    else {
-                        method.invoke(device, value);
-                    }
-                }
+                parseLine(line);
+                processLine();
             }
         }
         catch (Exception e) {
             throw new IllegalStateException("Can not read file", e);
         }
         return result;
+    }
+
+    private void processLine() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        if (key.equals("class")) {
+            createDevice();
+        }
+        else {
+            setAttribute();
+        }
+    }
+
+    private void parseLine(String line) {
+        String[] parts = line.split(":");
+        key = parts[0].trim();
+        value = parts[1].trim();
+    }
+
+    private void createDevice() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        String className = DevicesFile.class.getPackageName() + "." + value;
+        Class<? extends Device> clazz = Class.forName(className).asSubclass(Device.class);
+        Constructor<? extends Device> constructor = clazz.getConstructor();
+        device = constructor.newInstance();
+        result.add(device);
+    }
+
+    private void setAttribute() throws IllegalAccessException, InvocationTargetException {
+        String methodName = createMethodName();
+        Method method = findMethodByName(methodName);
+        Class<?> parameterType = method.getParameterTypes()[0];
+        Object convertedValue = convertValue(parameterType);
+        method.invoke(device, convertedValue);
+    }
+
+    private String createMethodName() {
+        return "set" + key.substring(0, 1).toUpperCase()
+                + key.substring(1);
+    }
+
+    private Method findMethodByName(String methodName) {
+        return  Arrays.stream(device.getClass().getMethods())
+                .filter(m -> m.getName().equals(methodName))
+                .findAny().orElseThrow();
+    }
+
+    private Object convertValue(Class<?> parameterType) {
+        if (parameterType == int.class) {
+            return Integer.parseInt(value);
+        }
+        else {
+            return value;
+        }
     }
 
     public static void main(String[] args) {
