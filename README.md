@@ -77,3 +77,7 @@ public double calculateRefillAmount() //kiszámolja, mennyit lehet tankolni
 ```
 
 Érdemes egy külön metódusba kiszervezni, hogy adott km megtételéhez van-e elegendő üzemanyagunk!
+
+## Tudásellenőrző teszt
+
+https://forms.office.com/Pages/ResponsePage.aspx?id=uo8WgI7Wd0uJJxcOS3B8gc7cFEH0fnFAsSYLZeAqjs9UMkczSjc4TEZOMElFSTRLRjJKSkI3WjNPVi4u
